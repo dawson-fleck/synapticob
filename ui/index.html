@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-deployment="local">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>SynaptiCob | An Interactive Neuroscience Simulation Laboratory</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%236C1D45'/%3E%3Cpath d='M4 18h6l3-10 5 17 3-10h7' fill='none' stroke='%23EAAA00' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-theme="concordia" data-state="loading" data-dirty="false" data-student-workspace="true">
+  <div class="app-shell">
+    <main class="main-content" id="mainWorkspace">
+      <header class="page-header student-header">
+        <div class="student-brand"><a class="brand" href="/" aria-label="SynaptiCob home"><svg viewBox="0 0 38 38" aria-hidden="true"><rect width="38" height="38" rx="11"/><path d="M7 21h6l3-11 5 19 3-12h7"/></svg><h1>Synapti<span>Cob</span></h1></a><p>An Interactive Neuroscience Simulation Laboratory</p></div>
+        <div class="header-context"><div class="model-badge"><span class="badge-icon" aria-hidden="true">∿</span><div>Conductance-based LIF<small id="modelMode">Spatial diffusion · two-state receptors</small></div></div><p id="currentRunStatus" class="current-run-status">Preparing your first experiment.</p></div>
+      </header>
+      <div id="statusBanner" class="status-banner" role="status" aria-live="polite"><span class="status-dot"></span><span id="statusText">Preparing your first experiment.</span></div>
+      <div id="errorBanner" class="error-banner" role="alert" hidden></div>
+      <button id="startupRetry" class="button button-secondary startup-retry" type="button" hidden>Reload page</button>
+      <div id="experimentError" class="error-banner" role="alert" hidden></div>
+      <div class="workspace-grid">
+        <section class="workspace-column" aria-label="Experiment workspace">
+          <nav id="workspaceTabs" class="workspace-tabs" role="tablist" aria-label="Experiment sections">
+            <button id="tab-experiment" type="button" role="tab" aria-selected="true" aria-controls="panel-experiment" tabindex="0" data-workspace-tab="experiment">Experiment</button>
+            <button id="tab-drugs" type="button" role="tab" aria-selected="false" aria-controls="panel-drugs" tabindex="-1" data-workspace-tab="drugs">Drug lab</button>
+            <button id="tab-results" type="button" role="tab" aria-selected="false" aria-controls="panel-results" tabindex="-1" data-workspace-tab="results">Results</button>
+            <button id="tab-guide" type="button" role="tab" aria-selected="false" aria-controls="panel-guide" tabindex="-1" data-workspace-tab="guide">Guide</button>
+          </nav>
+          <section id="panel-experiment" class="workspace-panel" role="tabpanel" aria-labelledby="tab-experiment" tabindex="0">
+            <div class="student-intro"><span class="eyebrow">START HERE</span><h2>One change. A visible response.</h2><p>Choose a scenario, change one input, and run. The neuron beside you always follows the last completed experiment.</p><ol class="student-steps"><li><span>1</span>Set up</li><li><span>2</span>Predict &amp; run</li><li><span>3</span>Watch &amp; compare</li></ol></div>
+            <div class="experiment-controls" aria-label="Experiment controls">
+      <div class="sidebar-intro"><span class="eyebrow">EXPERIMENTAL CONTROLS</span><h2>Shape the signal.</h2><p>Change an input. Follow the response.</p></div>
+      <div class="preset-panel">
+        <label for="presetSelect" class="preset-label">START WITH A SCENARIO</label>
+        <select id="presetSelect" disabled aria-label="Experimental preset"><option value="">Custom settings</option></select>
+        <p id="presetDescription">Illustrative scenarios for exploring synaptic integration.</p>
+        <button id="importSettingsButton" type="button" class="import-button" disabled><span aria-hidden="true">↥</span> Load saved settings</button>
+        <p id="importFeedback" class="import-feedback" role="status" aria-live="polite"></p>
+        <input id="importSettingsFile" type="file" accept=".json,application/json" hidden aria-label="Import saved parameter JSON">
+      </div>
+      <form id="parameterForm" novalidate>
+        <div id="controls" class="controls"><p class="loading-copy">Loading model parameters…</p></div>
+      </form>
+      <div class="sidebar-actions">
+        <button id="runSimulation" class="button button-primary" type="submit" form="parameterForm" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6z"/></svg><span>Run simulation</span></button>
+        <button id="resetParameters" class="button button-secondary" type="button" disabled>Reset to defaults</button>
+        <button id="restoreCompletedRun" class="button button-secondary undo-pending" type="button" disabled>Undo pending changes</button>
+        <p id="parameterStatus" class="parameter-status">Preparing the model…</p>
+      </div>
+
+            </div>
+          </section>
+          <section id="panel-drugs" class="workspace-panel" role="tabpanel" aria-labelledby="tab-drugs" tabindex="0" hidden>
+            <section id="drugLab" class="drug-lab" aria-labelledby="drugLabTitle"></section>
+          </section>
+          <section id="panel-results" class="workspace-panel" role="tabpanel" aria-labelledby="tab-results" tabindex="0" hidden>
+            <div class="panel-intro"><span class="eyebrow">COMPLETED EXPERIMENT</span><h2>Read the response.</h2><p>Inspect the data, compare conditions, and save a reproducible experiment.</p></div>
+      <section class="result-strip" aria-label="Simulation summary">
+        <div class="result-item outcome-item"><span id="resultOutcomeLabel" class="result-label">ACTION POTENTIAL</span><strong id="resultOutcome">-</strong><span id="outcomeDescription" class="result-detail">Awaiting simulation</span></div>
+        <div class="result-item"><span class="result-label">SPIKE COUNT</span><strong id="resultSpikeCount">—</strong><span class="result-detail">Recorded threshold events</span></div>
+        <div class="result-item"><span class="result-label">FIRST-SPIKE LATENCY</span><strong id="resultLatency">-</strong><span id="latencyReference" class="result-detail">From the first transmitter release</span></div>
+        <div class="result-item"><span class="result-label">PEAK LIF VOLTAGE</span><strong id="resultPeak">—</strong><span id="thresholdSummary" class="result-detail">Threshold —</span></div>
+      </section>
+
+      <section id="numericalResolutionWarning" class="numerical-warning" role="status" aria-live="polite" aria-labelledby="numericalResolutionTitle" hidden>
+        <h3 id="numericalResolutionTitle">Numerical resolution needs review</h3>
+        <p>These are computed outcomes at the current resolution. Refine the calculation before interpreting the spike decision or peak estimates.</p>
+        <ul id="numericalResolutionMessages"></ul>
+        <p id="numericalResolutionRecommendation"></p>
+      </section>
+
+      <div class="experiment-toolbar" aria-label="Export completed experiment">
+        <div><span class="tool-label">COMPLETED EXPERIMENT</span><span id="completedRunLabel">Awaiting a completed run</span></div>
+        <div class="export-actions"><button id="exportExperimentZip" type="button" class="export-main" disabled title="Includes settings, data, full numerical arrays, figure, model notes and reproducibility metadata."><span aria-hidden="true">↓</span> Save experiment</button><details id="exportMenu" class="export-menu"><summary>More exports <span aria-hidden="true">⌄</span></summary><div class="export-popover"><button id="exportTraceCsv" type="button" disabled title="Unit-labeled CSV with metadata comment lines beginning #. pandas readers can use comment='#'.">Time-series data <span>CSV</span></button><button id="exportSpikesCsv" type="button" disabled>Spike event times <span>CSV</span></button><button id="exportFigurePng" type="button" disabled>Scientific figure <span>PNG</span></button><button id="exportParametersJson" type="button" disabled>Parameter settings <span>JSON</span></button><button id="exportSummaryTxt" type="button" disabled>Model &amp; run summary <span>TXT</span></button></div></details></div>
+      </div>
+      <p id="experimentMessage" class="experiment-message" role="status" aria-live="polite">Saved experiments contain the completed run shown here, with its settings and numerical provenance.</p>
+      <p id="hostedSessionNote" class="experiment-message hosted-session-note" role="note" hidden>Results on this website are temporary. Use <strong>Save experiment</strong> to keep a copy before leaving.</p>
+      <div id="receptorInspection" class="receptor-inspection" aria-label="Receptor states at the current playback sample"></div>
+
+      <details class="spatial-card" id="spatialCard">
+        <summary><span>Spatial concentration snapshot</span><span id="spatialFrameTime">At 0.00 ms</span></summary>
+        <div class="spatial-intro"><span>Two independent domains · one distance scale</span><span><i class="readout-dot teal"></i> Glutamate <i class="readout-dot amber"></i> GABA</span></div>
+        <canvas id="spatialProfile" aria-label="Glutamate and GABA concentrations versus position in their independent one-dimensional domains" role="img"></canvas>
+        <p class="spatial-note">Dashed markers identify the release center and receptor sampling position. The profile uses the most recent calculated spatial frame at or before the playback clock.</p>
+      </details>
+
+      <section class="data-section" aria-label="Scientific results">
+        <div class="section-heading"><div><span class="eyebrow">FOLLOW THE MECHANISM</span><h2>The quantitative response</h2></div><p id="runDescription">Concentration → receptor activation → membrane voltage</p></div>
+        <p id="peakEstimateNote" class="peak-estimate-note">Peak concentrations and open fractions are estimates from recorded samples; a spiking LIF voltage peak includes the threshold.</p>
+        <div id="plots"><div class="empty-plots">Your scientific traces will appear after the first simulation.</div></div>
+      </section>
+
+      <section id="sweepPanel" aria-label="Parameter sweep"></section>
+
+          </section>
+          <section id="panel-guide" class="workspace-panel" role="tabpanel" aria-labelledby="tab-guide" tabindex="0" hidden>
+            <div class="panel-intro"><span class="eyebrow">STUDENT GUIDE</span><h2>Follow cause and effect.</h2><p>A short route from your prediction to a result you can explain.</p></div>
+            <div class="guide-card"><h3>Your first experiment</h3><ol><li>In <strong>Experiment</strong>, choose a starting scenario.</li><li>Predict what will change, then adjust one input and select <strong>Run experiment</strong>.</li><li>Use <strong>Play</strong> or drag the timeline. The live readings describe that recorded moment.</li><li>Open <strong>Results</strong> to inspect the traces, then explain the effect on firing.</li></ol><button type="button" class="button button-secondary" data-workspace-target="experiment">Start an experiment</button></div>
+            <div class="guide-card"><h3>Make a fair drug comparison</h3><p>Enable the Drug lab and load a lesson. Every drug run includes a matched control with all drugs off and the same receptor model. Change a single concentration, rerun, and compare.</p><p>Open <strong>How it works &amp; sources</strong> on any drug card for the mechanism and evidence. Free receptor concentrations are not clinical doses.</p><button type="button" class="button button-secondary" data-workspace-target="drugs">Explore the drug lab</button></div>
+            <div class="guide-card"><h3>Read the live display</h3><dl class="student-glossary"><div><dt>Membrane voltage</dt><dd>The model neuron's voltage at the displayed time. Crossing threshold creates a recorded spike and reset.</dd></div><div><dt>Open fraction</dt><dd>The fraction of modeled receptors in a conducting state. It is different from ligand binding.</dd></div><div><dt>GABA-A current</dt><dd>Signed drive on the membrane: positive is depolarizing and negative is hyperpolarizing at that moment. Conductance can also shunt excitation.</dd></div><div><dt>Peak this run</dt><dd>The maximum recorded open fraction in the whole completed experiment, rather than the current playback value.</dd></div><div><dt>Playback time</dt><dd>Position in an already calculated experiment. Playback speed changes the animation pace, not the model's timescale.</dd></div></dl></div>
+      <details class="model-notes" id="modelNotes">
+        <summary><span>Understand this model</span><span class="notes-summary">Assumptions, units &amp; interpretation</span></summary>
+        <div class="notes-grid">
+          <div><h3>A continuous chain of calculations</h3><p>Transmitter release drives two separate diffusion and clearance models. Local concentration controls a simplified receptor open-state fraction, which sets synaptic conductance and changes membrane voltage.</p></div>
+          <div><h3>What a spike means here</h3><p>The leaky integrate-and-fire model records a threshold crossing, resets the voltage, and enforces a refractory period. It does not calculate the sodium/potassium action-potential waveform or axonal propagation.</p></div>
+          <div><h3>Interpret the controls</h3><p>Release dose is integrated concentration in µM·µm in an effective one-dimensional extracellular domain. Receptor availability is relative, not a receptor count. These illustrative settings are not a calibrated biological specimen.</p></div>
+          <div><h3>Inhibition depends on voltage</h3><p>GABA-A conductance drives voltage toward its selected reversal potential. This may hyperpolarize the neuron or reduce its response to excitation through shunting.</p></div>
+        </div>
+        <div class="model-equation"><span>MEMBRANE INTEGRATION</span><code>Cₘ dV/dt = gL(EL − V) + gE(EE − V) + gI(EI − V)</code></div>
+      </details>
+          </section>
+        </section>
+      <section id="observationDeck" class="scene-card observation-deck" data-expanded="false" aria-labelledby="sceneTitle">
+        <div class="scene-heading"><div><span class="eyebrow">LIVE OBSERVATION</span><h2 id="sceneTitle">Follow the neuron.</h2></div><span id="sceneMode" class="scene-mode">SCHEMATIC VIEW</span><button id="observationToggle" class="observation-toggle" type="button" aria-expanded="false" aria-controls="neuronScene">Expand neuron</button></div>
+        <p id="observationRunStatus" class="observation-context" role="status">No completed experiment yet.</p>
+        <div id="neuronScene" class="neuron-scene"></div>
+        <div class="live-readouts" aria-label="Sample-held simulation readouts" aria-describedby="liveSamplingNote">
+          <div class="voltage-readout"><span class="live-label">MEMBRANE VOLTAGE</span><strong id="liveVoltage">−65.0 <small>mV</small></strong><div class="voltage-meter" id="voltageMeter"><span id="voltageMeterFill"></span><i id="voltageThresholdMarker"></i></div><span id="voltageMeterCaption" class="live-note">Threshold −50.0 mV</span></div>
+          <div><span class="live-label"><i class="readout-dot teal"></i> AMPA OPEN FRACTION</span><strong id="liveAmPa">0.0<small>%</small></strong><span id="ampaPeak" class="live-note">Peak this run —</span></div>
+          <div><span class="live-label"><i class="readout-dot amber"></i> GABA-A OPEN FRACTION</span><strong id="liveGaba">0.0<small>%</small></strong><span id="gabaPeak" class="live-note">Peak this run —</span></div>
+          <div class="current-readout" title="Membrane-drive convention: positive values depolarize; negative values hyperpolarize (gGABA × [EGABA − V]). This contribution to the membrane equation uses the opposite sign from the conventional outward-positive current."><span class="live-label">GABA-A CURRENT</span><strong id="gabaCurrent">0.0 <small>pA</small></strong><span id="gabaDirection" class="live-note">No active conductance</span></div>
+        </div>
+        <p id="liveSamplingNote" class="live-sampling-note">Recorded sample <output id="liveSampleTime">0</output> ms · voltage resets at exact spike times.</p>
+        <div class="playback-bar" aria-label="Simulation playback controls">
+          <div class="playback-buttons"><button id="playbackPlay" type="button" class="play-button" disabled aria-label="Play simulation"><span id="playbackPlayIcon" aria-hidden="true">▶</span><span id="playbackPlayLabel">Play</span></button><button id="playbackReset" type="button" class="reset-playback" disabled title="Restart playback at zero" aria-label="Restart playback">↺</button></div>
+          <div class="timeline-block"><div class="timeline-heading"><span><output id="playbackClock">0.00</output> <span class="timeline-unit">ms</span></span><span id="playbackDuration">100 ms simulation</span></div><input id="playbackTimeline" type="range" min="0" max="100" step="any" value="0" disabled aria-label="Simulation timeline in milliseconds"></div>
+          <label class="speed-control"><span>PLAYBACK</span><select id="playbackSpeed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+          <div class="event-readout"><strong id="playbackSpikeCount">0</strong><span>spikes shown</span></div>
+        </div>
+        <div class="observation-actions"><button id="globalRun" class="button button-primary" type="button" disabled>Run experiment</button><button class="button button-secondary observation-results" type="button" data-workspace-target="results">View results</button><button id="observationResolutionLink" class="observation-warning-link" type="button" hidden>Review timestep</button></div>
+        <details class="observation-notes"><summary>About this animation</summary>
+        <div class="scene-caption"><p><span class="caption-dot teal"></span>Glutamate → AMPA<span class="caption-separator"></span><span class="caption-dot amber"></span>GABA → GABA-A</p><span>1× playback = 5 ms of model time per real second</span></div>
+        <div class="animation-disclaimer" id="animationDisclaimer">Particles are representative samples of calculated concentrations in two separate 1D domains. Their transverse motion and the axonal pulse are illustrative. Each terminal represents a group of synaptic contacts.</div>
+        </details>
+      </section>
+
+      </div>
+      <footer class="main-footer"><span>SynaptiCob <span class="footer-divider">/</span> An Interactive Neuroscience Simulation Laboratory</span><span id="simulationId">No completed run</span></footer>
+    </main>
+  </div>
+  <script type="module">
+    // Keep startup recovery in this page: an older running server may not serve
+    // a newly added JavaScript module, so app.js itself cannot report the error.
+    const hosted = document.documentElement.dataset.deployment === 'hosted';
+    const retry = document.getElementById('startupRetry');
+    retry.addEventListener('click', () => window.location.reload());
+    import('./app.js').catch(() => {
+      document.body.dataset.state = 'error';
+      const message = hosted
+        ? 'SynaptiCob could not finish opening. Check your internet connection and reload this page. If the problem continues, contact your instructor.'
+        : 'SynaptiCob could not finish opening. Open Start_SynaptiCob.bat again and use the browser tab it opens. Leave that launcher window open while using the app.';
+      const banner = document.getElementById('errorBanner');
+      banner.textContent = message;
+      banner.hidden = false;
+      document.getElementById('statusText').textContent = hosted ? 'Reload this page to load the controls.' : 'Restart SynaptiCob to load the updated controls.';
+      retry.hidden = !hosted;
+      document.getElementById('statusBanner').dataset.tone = 'pending';
+      document.getElementById('parameterStatus').textContent = 'Controls are unavailable until the application finishes opening.';
+      const loadingCopy = document.querySelector('#controls .loading-copy');
+      if (loadingCopy) loadingCopy.textContent = hosted ? 'The controls could not be loaded. Check the message above and reload this page.' : 'The controls could not be loaded. Follow the restart instructions on this page.';
+    });
+  </script>
+</body>
+</html>

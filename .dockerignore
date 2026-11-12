@@ -1,0 +1,15 @@
+*
+!Dockerfile
+!requirements.txt
+!requirements-hosted.txt
+!gunicorn.conf.py
+!hosted_app.py
+!hosted_storage.py
+!SCIENTIFIC_MODEL.md
+!DRUG_SCIENCE.md
+!neurochemsim/
+!neurochemsim/**
+!ui/
+!ui/**
+**/__pycache__/
+**/*.pyc
